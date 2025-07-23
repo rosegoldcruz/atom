@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /pricing
+Allow: /faq
+Allow: /demo
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /api/
+
+Sitemap: https://atom-defi.vercel.app/sitemap.xml

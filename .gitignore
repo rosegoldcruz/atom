@@ -371,6 +371,33 @@ private-configs/
 *internal*
 
 # ============================================================================
+# 🚨 ADDITIONAL SECURITY PATTERNS 🚨
+# ============================================================================
+# Catch any missed sensitive patterns
+**/secrets/**
+**/private/**
+**/confidential/**
+**/.env*
+**/*key*
+**/*secret*
+**/*password*
+**/*credential*
+**/*token*
+**/*auth*
+
+# IDE and editor files
+**/.vscode/
+**/.idea/
+**/*.swp
+**/*.swo
+**/*~
+
+# OS generated files
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini
+
+# ============================================================================
 # END OF ULTIMATE SECURITY GITIGNORE
 # 🛡️ FORTRESS MODE: MAXIMUM PROTECTION ACTIVATED 🛡️
 # ============================================================================

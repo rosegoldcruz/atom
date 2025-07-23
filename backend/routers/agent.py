@@ -246,6 +246,22 @@ async def get_agent_performance(agent_id: str, days: int = 7):
             "total_gas_cost": round(random.uniform(5, 50), 4),
             "avg_execution_time": round(random.uniform(0.5, 3.0), 2),
             "uptime_percentage": round(random.uniform(95, 99.9), 2),
+            "intelligence_metrics": {
+                "pattern_recognition": round(random.uniform(90, 99), 1),
+                "market_prediction": round(random.uniform(85, 95), 1),
+                "risk_assessment": round(random.uniform(88, 97), 1),
+                "execution_speed": f"{random.randint(50, 150)}ms",
+                "learning_rate": round(random.uniform(0.85, 0.98), 3),
+                "adaptation_score": round(random.uniform(80, 95), 1)
+            },
+            "battle_stats": {
+                "wins": random.randint(45, 85),
+                "losses": random.randint(5, 15),
+                "win_streak": random.randint(0, 12),
+                "rank": random.randint(1, 3),
+                "xp": random.randint(5000, 15000),
+                "level": random.randint(25, 55)
+            },
             "daily_breakdown": []
         }
 
