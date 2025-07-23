@@ -28,6 +28,8 @@ import { ConsoleLogs } from "@/components/dashboard/ConsoleLogs";
 import { TradeHistory } from "@/components/dashboard/TradeHistory";
 import { ChatWithAgent } from "@/components/dashboard/ChatWithAgent";
 import { ArbitrageControls } from "@/components/dashboard/ArbitrageControls";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AuthHeader } from "@/components/auth/AuthHeader";
 import { RealTimeProfitTracker } from "@/components/dashboard/RealTimeProfitTracker";
 import { OpportunityHunter } from "@/components/dashboard/OpportunityHunter";
 import { AgentBattleArena } from "@/components/dashboard/AgentBattleArena";
@@ -124,7 +126,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+    <ProtectedRoute>
+      <AuthHeader />
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
       {/* Header */}
       <div className="border-b border-gray-800 bg-black/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -304,6 +308,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
