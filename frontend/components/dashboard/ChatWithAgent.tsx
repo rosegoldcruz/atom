@@ -54,7 +54,7 @@ export function ChatWithAgent() {
     setIsLoading(true);
 
     try {
-      const response = await api.agent.chat({ message: inputValue });
+      const response = await api.agents.chat({ message: inputValue });
       
       if (response.success && response.data) {
         const agentMessage: Message = {
