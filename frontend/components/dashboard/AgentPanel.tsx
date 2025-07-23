@@ -155,7 +155,7 @@ export function AgentPanel() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => toggleAgent(agent.id)}
+                  onClick={() => toggleAgent(agent.id, agent.status)}
                   className="border-gray-600 text-white hover:bg-gray-700"
                 >
                   {agent.status === 'active' ? (
