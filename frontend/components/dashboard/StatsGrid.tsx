@@ -95,7 +95,7 @@ export function StatsGrid() {
       title: "Success Rate",
       value: `${statsData.success_rate.toFixed(1)}%`,
       change: `${statsData.successful_trades}/${statsData.total_trades}`,
-      changeType: statsData.success_rate > 90 ? "positive" : statsData.success_rate > 70 ? "neutral" : "negative",
+      changeType: (statsData.success_rate > 90 ? "positive" : statsData.success_rate > 70 ? "neutral" : "negative") as "positive" | "neutral" | "negative",
       icon: TrendingUp,
       description: "Trade success percentage",
     },
