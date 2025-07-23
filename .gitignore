@@ -401,3 +401,5 @@ private-configs/
 # END OF ULTIMATE SECURITY GITIGNORE
 # 🛡️ FORTRESS MODE: MAXIMUM PROTECTION ACTIVATED 🛡️
 # ============================================================================
+
+.vercel
