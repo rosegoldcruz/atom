@@ -239,3 +239,7 @@ _archive/
 .vercel
 .env
 .env.*
+
+
+# Ignore entire docs directory (contains sample secrets/placeholder patterns)
+docs/
