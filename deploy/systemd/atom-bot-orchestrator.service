@@ -1,34 +1,71 @@
 [Unit]
-Description=ATOM Bot Orchestrator (supervises all scanner bots)
+Description=ATOM Bot Orchestrator
+Documentation=https://github.com/atom/backend-bots
 After=network-online.target redis-server.service
 Wants=network-online.target
+Requires=redis-server.service
 
 [Service]
 Type=simple
 User=atom
 Group=atom
-WorkingDirectory=/mnt/c/Users/Administrator/atom
-EnvironmentFile=/mnt/c/Users/Administrator/atom/config/.env.production
-# IMPORTANT: disable individual bot services when using the orchestrator
-ExecStart=/opt/atom-venv/bin/python -u bots/bot_orchestrator.py
-Restart=always
-RestartSec=3
-LimitNOFILE=65536
+WorkingDirectory=/srv/atom/backend-bots
+EnvironmentFile=/etc/atom/backend-bots.env
 
 # Security hardening
 NoNewPrivileges=true
 PrivateTmp=true
-ProtectSystem=full
+PrivateDevices=true
+ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/mnt/c/Users/Administrator/atom
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
 LockPersonality=true
 MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @privileged @reboot @swap @raw-io
+
+# Resource limits
+MemoryMax=2G
+TasksMax=2048
+LimitNOFILE=65536
+LimitNPROC=1024
+
+# Paths
+ReadWritePaths=/srv/atom/backend-bots/logs
+ReadOnlyPaths=/srv/atom/backend-bots
+
+# Capabilities
 CapabilityBoundingSet=
 AmbientCapabilities=
-UMask=027
+
+# Process management
+ExecStart=/srv/atom/.venv/bin/python -u orchestrator.py
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=60
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Logging
 StandardOutput=journal
 StandardError=journal
+SyslogIdentifier=atom-orchestrator
+
+# Environment
+UMask=027
+
+# Health monitoring
+WatchdogSec=300
 
 [Install]
 WantedBy=multi-user.target 

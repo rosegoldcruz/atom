@@ -1,15 +1,68 @@
 [Unit]
-Description=ATOM FastAPI
-After=network-online.target
+Description=ATOM FastAPI Backend
+Documentation=https://github.com/atom/backend-api
+After=network-online.target redis-server.service
 Wants=network-online.target
+Requires=redis-server.service
 
 [Service]
+Type=simple
 User=atom
+Group=atom
 WorkingDirectory=/srv/atom/backend-api
 EnvironmentFile=/etc/atom/backend-api.env
-ExecStart=/usr/bin/uvicorn main:app --app-dir /srv/atom/backend-api --host 0.0.0.0 --port 8000 --proxy-headers
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @privileged @reboot @swap @raw-io
+
+# Resource limits
+MemoryMax=1G
+TasksMax=1024
+LimitNOFILE=65536
+LimitNPROC=512
+
+# Paths
+ReadWritePaths=/srv/atom/backend-api/logs
+ReadOnlyPaths=/srv/atom/backend-api
+
+# Capabilities
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+# Process management
+ExecStart=/srv/atom/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --workers 4
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
 Restart=always
-RestartSec=3
+RestartSec=5
+StartLimitInterval=60
+StartLimitBurst=3
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=atom-api
+
+# Environment
+UMask=027
 
 [Install]
 WantedBy=multi-user.target
