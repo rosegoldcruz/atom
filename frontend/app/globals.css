@@ -13,7 +13,8 @@
 }
 
 .animate-scroll-left {
-  animation: scroll-left 30s linear infinite;
+  animation: scroll-left 12s linear infinite;
+  will-change: transform;
 }
 
 
