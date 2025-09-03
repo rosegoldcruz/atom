@@ -35,7 +35,9 @@ class SystemValidator:
     def load_config(self):
         """Load test configuration"""
         self.polygon_rpc = os.getenv('POLYGON_RPC_URL', 'https://polygon-rpc.com')
-        self.redis_url = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
+        self.redis_url = os.getenv('REDIS_URL')
+        if not self.redis_url:
+            raise RuntimeError('REDIS_URL not set for tests')
         self.flash_loan_contract = os.getenv('FLASH_LOAN_CONTRACT', '0x34d560b34d3dB2671260092AbAcbA05399121E9a')
         
     def setup_connections(self):

@@ -40,7 +40,7 @@ POLYGON_RPC_URL = _env("POLYGON_RPC_URL", required=True)
 CHAIN_ID_EXPECTED = int(_env("LM_CHAIN_ID", "137"))
 
 # Redis & ops
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 REDIS_STREAM = _env("LM_REDIS_STREAM", "atom:opps:liquidity")
 REDIS_MAXLEN = int(_env("LM_REDIS_MAXLEN", "1000"))
 KILL_SWITCH_KEY = _env("KILL_SWITCH_KEY", "atom:kill_switch")

@@ -33,7 +33,7 @@ def _env(name: str, default: Optional[str] = None, required: bool = False) -> st
 
 # Core infra
 RPC_URL = _env("POLYGON_RPC_URL", required=True)
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 
 # Aave v3 (Polygon) subgraph + pool
 AAVE_V3_SUBGRAPH_URL = _env("AAVE_V3_SUBGRAPH_URL", "https://api.thegraph.com/subgraphs/name/aave/protocol-v3-polygon")

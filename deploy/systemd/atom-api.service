@@ -46,7 +46,7 @@ CapabilityBoundingSet=
 AmbientCapabilities=
 
 # Process management
-ExecStart=/srv/atom/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --workers 4
+ExecStart=/srv/atom/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --workers 4
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=mixed
 KillSignal=SIGTERM

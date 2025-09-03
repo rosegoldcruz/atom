@@ -32,7 +32,7 @@ def _env(name: str, default: Optional[str] = None, required: bool = False) -> st
     return "" if v is None else str(v)
 
 RPC_URL = _env("POLYGON_RPC_URL", required=True)
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 
 # Scan cadence & discovery
 SCAN_INTERVAL_SEC = float(_env("TRI_SCAN_INTERVAL_SEC", "3.0"))

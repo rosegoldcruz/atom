@@ -115,6 +115,7 @@ echo ""
 
 print_warning "🔑 CRITICAL: Trading Wallet Private Key"
 print_warning "This private key will be used for arbitrage trading. Ensure it has sufficient funds."
+set +o history  # disable history to avoid leaking secrets
 while true; do
     read_secret "Trading Wallet Private Key (64 hex characters)" "PRIVATE_KEY"
     
@@ -129,6 +130,7 @@ while true; do
         echo "Example: 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
     fi
 done
+set -o history  # re-enable history
 echo ""
 
 print_warning "🤖 Smart Contract Addresses"

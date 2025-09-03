@@ -3,6 +3,7 @@ import random
 import asyncio
 from typing import List, Callable, Awaitable, Any
 from web3 import Web3, HTTPProvider
+from .safe_async import CircuitBreaker, guard
 
 # Comma-separated list of HTTP RPC URLs
 _RPCs: List[str] = [x.strip() for x in os.environ.get("ETH_RPC_URLS", "").split(",") if x.strip()]
@@ -14,6 +15,7 @@ if not _RPCs:
             _RPCs.append(v)
 
 _PROVIDERS: List[Web3] = [Web3(HTTPProvider(u, request_kwargs={"timeout": 10})) for u in _RPCs]
+_breaker = CircuitBreaker(fail_max=int(os.getenv("RPC_FAIL_MAX", "5")), reset_after=float(os.getenv("RPC_BREAKER_RESET", "30")))
 
 async def choose_web3() -> Web3:
     """Pick a healthy provider by sampling the pool and verifying block access."""
@@ -22,8 +24,7 @@ async def choose_web3() -> Web3:
     for _ in range(len(_PROVIDERS)):
         w3 = random.choice(_PROVIDERS)
         try:
-            # web3 is blocking; run in thread
-            _ = await asyncio.to_thread(lambda: w3.eth.block_number)
+            _ = await guard(asyncio.to_thread(lambda: w3.eth.block_number), timeout=5.0, retries=2, backoff=0.2, breaker=_breaker)
             return w3
         except Exception:
             await asyncio.sleep(0.05)
@@ -38,7 +39,7 @@ async def with_w3(fn: Callable[[Web3], Awaitable[Any]]):
     for _ in range(len(_PROVIDERS)):
         w3 = await choose_web3()
         try:
-            return await fn(w3)
+            return await guard(fn(w3), timeout=15.0, retries=2, backoff=0.5, breaker=_breaker)
         except Exception as e:
             last_err = e
             await asyncio.sleep(0.5)

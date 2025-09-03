@@ -108,7 +108,10 @@ class ProductionBotManager:
             
             # Test Redis
             import redis
-            redis_url = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
+            redis_url = os.getenv('REDIS_URL')
+            if not redis_url:
+                logger.error("❌ Missing REDIS_URL")
+                return False
             r = redis.from_url(redis_url)
             r.ping()
             logger.info("✅ Redis connection successful")

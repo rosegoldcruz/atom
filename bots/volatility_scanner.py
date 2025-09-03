@@ -35,7 +35,7 @@ def _env(name: str, default: Optional[str] = None, required: bool = False) -> st
 
 # RPC/Redis
 RPC_URL = _env("POLYGON_RPC_URL", required=True)
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 
 # Subgraphs (require explicit config; defaults are safe to change at runtime)
 QS_SUBGRAPH_URL = _env("QS_SUBGRAPH_URL", "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06")

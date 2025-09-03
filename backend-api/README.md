@@ -84,6 +84,16 @@ sudo systemctl stop atom-api
 
 ### Health Checks
 
+Health endpoints are protected. By default, requests from `127.0.0.1` and `::1` are allowed without a token. All other callers must present a valid JWT (Clerk) or will receive 401/403.
+
+Configuration:
+
+```bash
+# Comma-separated IPs allowed to hit /health without JWT
+HEALTH_IP_ALLOWLIST=127.0.0.1,::1
+```
+
+Examples:
 ```bash
 # Local health check
 curl -fsS http://127.0.0.1:8000/health
@@ -110,6 +120,16 @@ chmod +x scripts/run_local.sh
 # Verify environment in systemd context
 sudo /usr/bin/env -i $(cat /etc/atom/backend-api.env | xargs) python3 scripts/verify_env.py
 ```
+
+### Redis Configuration
+
+All components now use a single environment variable with credentials:
+
+```bash
+REDIS_URL=redis://:strongpassword@127.0.0.1:6379/0
+```
+
+If `REDIS_URL` is missing or lacks a password, services will fail fast at startup.
 
 ## API Endpoints
 

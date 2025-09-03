@@ -39,7 +39,7 @@ def _env(name: str, default: Optional[str] = None, required: bool = False) -> st
 WORKDIR = _env("ATOM_WORKDIR", os.getcwd())
 PYTHON_BIN = _env("ORCH_PYTHON_BIN", "/opt/atom-venv/bin/python")
 ORCH_METRICS_PORT = int(_env("ORCH_METRICS_PORT", "9120"))
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 KILL_SWITCH_KEY = _env("KILL_SWITCH_KEY", "atom:kill_switch")
 
 # Enable only these bots (comma separated); default runs them all

@@ -5,7 +5,7 @@ Clerk JWT authentication middleware for FastAPI.
 import os
 import jwt
 import structlog
-from typing import Optional, Set
+from typing import Optional, Set, List
 from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
@@ -18,6 +18,10 @@ class ClerkJWTMiddleware(BaseHTTPMiddleware):
     def __init__(self):
         self.clerk_secret_key = os.getenv("CLERK_SECRET_KEY")
         self.clerk_publishable_key = os.getenv("CLERK_PUBLISHABLE_KEY")
+        self.health_ip_allowlist: List[str] = [ip.strip() for ip in os.getenv("HEALTH_IP_ALLOWLIST", "127.0.0.1,::1").split(",") if ip.strip()]
+        
+        if not self.clerk_secret_key:
+            raise RuntimeError("CLERK_SECRET_KEY environment variable is required for JWT authentication. Set it before starting the API server.")
         
         # Routes that require authentication
         self.protected_paths: Set[str] = {
@@ -30,26 +34,25 @@ class ClerkJWTMiddleware(BaseHTTPMiddleware):
         # Routes that are always public
         self.public_paths: Set[str] = {
             "/",
-            "/health",
-            "/health/ready",
             "/metrics",
             "/docs",
             "/redoc",
             "/openapi.json",
         }
         
-        if not self.clerk_secret_key:
-            logger.warning("CLERK_SECRET_KEY not configured - JWT verification disabled")
     
     async def dispatch(self, request: Request, call_next):
         """Process request and verify JWT if needed."""
         
-        # Skip authentication if Clerk is not configured
-        if not self.clerk_secret_key:
-            return await call_next(request)
+        path = request.url.path
+        # Health endpoints: allow only from allowlisted IPs, otherwise require JWT
+        if path.startswith("/health") or path.startswith("/v1/healthz"):
+            client_ip = request.client.host if request.client else "unknown"
+            if client_ip in self.health_ip_allowlist:
+                return await call_next(request)
+            # otherwise continue to JWT verification below
         
         # Check if path requires authentication
-        path = request.url.path
         requires_auth = self._requires_authentication(path)
         
         if requires_auth:
@@ -74,12 +77,12 @@ class ClerkJWTMiddleware(BaseHTTPMiddleware):
             if path.startswith(public_path):
                 return False
         
-        # Check protected paths
-        for protected_path in self.protected_paths:
+        # Protected paths
+        protected_paths = self.protected_paths.union({"/health", "/health/ready", "/v1/healthz"})
+        for protected_path in protected_paths:
             if path.startswith(protected_path):
                 return True
         
-        # Default to no authentication for other paths
         return False
     
     async def _verify_jwt(self, request: Request) -> str:

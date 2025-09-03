@@ -294,7 +294,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
         "app.main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=int(os.getenv("PORT", "8000")),
         log_config=None,  # Use our structured logging
         access_log=False,  # Disable uvicorn access logs

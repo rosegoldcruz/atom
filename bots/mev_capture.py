@@ -44,7 +44,7 @@ if CHAIN not in ("polygon", "ethereum"):
 RPC_URL = _env("POLYGON_RPC_URL" if CHAIN == "polygon" else "ETHEREUM_RPC_URL", required=True)
 WSS_URL = _env("POLYGON_WSS_URL" if CHAIN == "polygon" else "ETHEREUM_WSS_URL", "")
 
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 
 # Stream/metrics/controls
 REDIS_STREAM = _env("MEV_REDIS_STREAM", "atom:opps:mev")

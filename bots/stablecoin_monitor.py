@@ -32,7 +32,7 @@ def _env(name: str, default: Optional[str] = None, required: bool = False) -> st
     return str(val) if val is not None else ""
 
 RPC_URL = _env("POLYGON_RPC_URL", required=True)
-REDIS_URL = _env("REDIS_URL", "redis://127.0.0.1:6379/0")
+REDIS_URL = _env("REDIS_URL", required=True)
 SCAN_INTERVAL_SEC = float(_env("STABLESCAN_INTERVAL_SEC", "1.0"))
 MAX_WORKERS = int(_env("STABLESCAN_MAX_WORKERS", "16"))
 SPREAD_BPS_THRESHOLD = int(_env("STABLESCAN_SPREAD_BPS", "35"))  # 0.35%

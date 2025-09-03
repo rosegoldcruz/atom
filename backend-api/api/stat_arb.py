@@ -13,11 +13,13 @@ from fastapi import APIRouter, HTTPException, Query
 from starlette.responses import JSONResponse
 
 import redis.asyncio as redis
+from config.secure_config import SecureConfig
 
 logger = logging.getLogger("api.stat_arb")
 router = APIRouter(prefix="/stat-arb", tags=["stat_arb"]) 
 
-REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
+_cfg = SecureConfig()
+REDIS_URL = _cfg.require("REDIS_URL")
 STREAM = os.getenv("STAT_ARB_REDIS_STREAM", "atom:opps:stat_arb")
 
 _redis_client: Optional[redis.Redis] = None
