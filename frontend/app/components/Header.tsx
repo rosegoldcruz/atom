@@ -57,6 +57,19 @@ export default function Header() {
               </SignedOut>
             </nav>
 
+            <div className="mt-4 space-y-2">
+              <a href="https://dashboard.smart4technology.com" className="block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-500">
+                Dashboard Login
+              </a>
+              <SignedOut>
+                <SignInButton>
+                  <button className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm hover:bg-white/20">
+                    Login
+                  </button>
+                </SignInButton>
+              </SignedOut>
+            </div>
+
             <div className="mt-4 border-t border-white/10 pt-4">
               <SignedIn>
                 <UserButton

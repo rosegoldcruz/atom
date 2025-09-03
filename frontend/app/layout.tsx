@@ -36,8 +36,8 @@ export default function RootLayout({
     <ClerkProvider
       signInUrl="/login"
       signUpUrl="/register"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/dashboard"
+      afterSignInUrl="https://dashboard.smart4technology.com"
+      afterSignUpUrl="https://dashboard.smart4technology.com"
     >
       <html lang="en" className="dark">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white min-h-screen`}>
