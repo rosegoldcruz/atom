@@ -1,16 +1,33 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 export default clerkMiddleware(async (auth, req) => {
-  await auth.protect();
+  const url = req.nextUrl;
+  const host = url.hostname;
+
+  // If user is on the dashboard subdomain root, redirect to the protected dashboard app
+  if (host === "dashboard.smart4technology.com" && url.pathname === "/") {
+    return NextResponse.redirect(new URL("/dashboard", url));
+  }
+
+  // Protect private areas only; marketing pages remain public
+  if (
+    url.pathname.startsWith("/dashboard") ||
+    url.pathname.startsWith("/account") ||
+    url.pathname.startsWith("/admin") ||
+    url.pathname.startsWith("/api/private/")
+  ) {
+    await auth.protect();
+  }
 });
 
-// Only invoke Clerk on private zones. Do NOT include "/" here.
+// Invoke on private zones plus root (to enable dashboard subdomain redirect)
 export const config = {
   matcher: [
-    "/dashboard/:path*",      // authenticated app
-    "/account/:path*",        // user settings area (if used)
-    "/admin/:path*",          // admin area (if used)
-    // Next API routes that require auth (most APIs are FastAPI on separate domain)
+    "/dashboard/:path*",
+    "/account/:path*",
+    "/admin/:path*",
     "/api/private/:path*",
+    "/",
   ],
 };
