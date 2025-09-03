@@ -41,25 +41,25 @@ async def check_http_endpoint():
 
 def main():
     bot_type = os.getenv('BOT_TYPE', 'unknown')
-
+    
     async def _run():
-        # Basic checks for all bots
-        if not check_redis():
-            print("Redis health check failed")
-            sys.exit(1)
-
-        if not check_web3():
-            print("Web3 RPC health check failed")
-            sys.exit(1)
-
-        # Specific checks based on bot type
-        if bot_type == 'monitoring':
+    # Basic checks for all bots
+    if not check_redis():
+        print("Redis health check failed")
+        sys.exit(1)
+        
+    if not check_web3():
+        print("Web3 RPC health check failed")
+        sys.exit(1)
+    
+    # Specific checks based on bot type
+    if bot_type == 'monitoring':
             if not await check_http_endpoint():
-                print("HTTP endpoint health check failed")
-                sys.exit(1)
-
-        print(f"Health check passed for {bot_type}")
-        sys.exit(0)
+            print("HTTP endpoint health check failed")
+            sys.exit(1)
+    
+    print(f"Health check passed for {bot_type}")
+    sys.exit(0)
 
     asyncio.run(_run())
 

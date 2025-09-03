@@ -3,9 +3,38 @@
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import * as Dialog from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Header() {
+  const router = useRouter();
+  const [isRouting, setIsRouting] = useState(false);
+
+  async function goDashboardInternal() {
+    try {
+      setIsRouting(true);
+      await Promise.resolve();
+      router.push('/dashboard');
+    } catch (e) {
+      console.error('dashboard route error', e);
+      window.location.href = '/dashboard';
+    } finally {
+      setIsRouting(false);
+    }
+  }
+
+  async function goDashboardExternal() {
+    try {
+      setIsRouting(true);
+      window.location.href = 'https://dashboard.smart4technology.com';
+    } catch (e) {
+      console.error('external dashboard error', e);
+    } finally {
+      setIsRouting(false);
+    }
+  }
+
   return (
     <header className="fixed top-2 left-2 z-50">
       <Dialog.Root>
@@ -42,9 +71,9 @@ export default function Header() {
 
               <SignedIn>
                 <Dialog.Close asChild>
-                  <Link href="/dashboard" className="block rounded-md px-3 py-2 text-white/80 hover:bg-white/10">
-                    Dashboard
-                  </Link>
+                  <button onClick={goDashboardInternal} className="w-full text-left rounded-md px-3 py-2 text-white/80 hover:bg-white/10 flex items-center gap-2">
+                    {isRouting && <Loader2 className="h-4 w-4 animate-spin" />} Dashboard
+                  </button>
                 </Dialog.Close>
               </SignedIn>
 
@@ -58,9 +87,9 @@ export default function Header() {
             </nav>
 
             <div className="mt-4 space-y-2">
-              <a href="https://dashboard.smart4technology.com" className="block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-500">
-                Dashboard Login
-              </a>
+              <button onClick={goDashboardExternal} className="block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-500 flex items-center justify-center gap-2">
+                {isRouting && <Loader2 className="h-4 w-4 animate-spin" />} Dashboard Login
+              </button>
               <SignedOut>
                 <SignInButton>
                   <button className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm hover:bg-white/20">
