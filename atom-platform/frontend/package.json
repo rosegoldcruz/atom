@@ -1,0 +1,44 @@
+{
+  "name": "atom-frontend",
+  "version": "1.0.0",
+  "description": "ATOM Platform Frontend Dashboard",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
+    "@types/node": "^20.8.9",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "tailwindcss": "^3.3.5",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "recharts": "^2.8.0",
+    "@types/recharts": "^1.8.28",
+    "date-fns": "^2.30.0",
+    "clsx": "^2.0.0",
+    "framer-motion": "^10.16.5",
+    "use-websocket": "^4.5.0",
+    "zustand": "^4.4.7",
+    "react-hot-toast": "^2.4.1",
+    "@rainbow-me/rainbowkit": "^1.2.0",
+    "wagmi": "^1.4.7",
+    "viem": "^1.19.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "eslint-config-next": "^14.0.3",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10"
+  }
+}

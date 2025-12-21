@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS for ATOM Platform */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --atom-primary: #1a1a2e;
+  --atom-secondary: #16213e;
+  --atom-accent: #0f3460;
+  --atom-highlight: #e94560;
+  --atom-success: #00d4aa;
+  --atom-warning: #ff9f43;
+  --atom-error: #ff4757;
+  --atom-info: #3742fa;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, var(--atom-primary) 0%, var(--atom-secondary) 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+body {
+  background-attachment: fixed;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+/* Status indicators */
+.status-indicator {
+  position: relative;
+  display: inline-block;
+}
+
+.status-indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-live::before {
+  background-color: var(--atom-success);
+}
+
+.status-paused::before {
+  background-color: var(--atom-warning);
+}
+
+.status-protected::before {
+  background-color: var(--atom-error);
+}
+
+.status-degraded::before {
+  background-color: var(--atom-warning);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.6s ease-out;
+}
+
+/* Custom components */
+.card {
+  @apply glass p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.button {
+  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.button-primary {
+  @apply button bg-atom-highlight text-white hover:bg-opacity-90;
+}
+
+.button-secondary {
+  @apply button bg-white bg-opacity-10 text-white hover:bg-opacity-20 border border-white border-opacity-20;
+}
+
+.button-success {
+  @apply button bg-atom-success text-white hover:bg-opacity-90;
+}
+
+.button-warning {
+  @apply button bg-atom-warning text-white hover:bg-opacity-90;
+}
+
+.button-error {
+  @apply button bg-atom-error text-white hover:bg-opacity-90;
+}
+
+/* Form styles */
+.input {
+  @apply w-full px-4 py-3 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-atom-highlight focus:border-transparent;
+}
+
+.select {
+  @apply input appearance-none bg-no-repeat bg-right-2;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* Data visualization */
+.chart-container {
+  @apply glass p-4 rounded-xl;
+}
+
+/* Event feed */
+.event-item {
+  @apply p-4 mb-2 glass rounded-lg border-l-4 transition-all duration-200 hover:bg-opacity-20;
+}
+
+.event-success {
+  @apply event-item border-atom-success;
+}
+
+.event-warning {
+  @apply event-item border-atom-warning;
+}
+
+.event-error {
+  @apply event-item border-atom-error;
+}
+
+.event-info {
+  @apply event-item border-atom-info;
+}
+
+/* Navigation */
+.nav-item {
+  @apply flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-white hover:bg-opacity-10 rounded-lg transition-all duration-200;
+}
+
+.nav-item.active {
+  @apply text-white bg-atom-highlight bg-opacity-20;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .card {
+    @apply p-4;
+  }
+  
+  .button {
+    @apply px-4 py-2 text-sm;
+  }
+}
+
+/* Loading states */
+.loading-skeleton {
+  @apply bg-white bg-opacity-10 rounded animate-pulse;
+}
+
+/* Tooltip */
+.tooltip {
+  @apply relative;
+}
+
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  @apply absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-sm rounded-lg whitespace-nowrap z-50;
+}
+
+/* Progress bars */
+.progress-bar {
+  @apply w-full bg-white bg-opacity-10 rounded-full h-2;
+}
+
+.progress-fill {
+  @apply bg-atom-highlight h-2 rounded-full transition-all duration-300;
+}
