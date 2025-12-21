@@ -13,11 +13,47 @@ import {
   InformationCircleIcon
 } from '@heroicons/react/24/outline';
 
+interface OpportunityPayload {
+  chain?: string;
+  confidence_score?: number;
+  asset_in?: string;
+  asset_out?: string;
+  spread_bps?: number;
+}
+
+interface ExecutionPayload {
+  actual_profit?: number;
+  actual_gas?: number;
+  revert_reason?: string;
+  gas_used?: number;
+}
+
+interface SafetyPayload {
+  trigger_type?: string;
+  action_taken?: string;
+}
+
+interface SystemPayload {
+  previous_status?: string;
+  current_status?: string;
+}
+
+type EventPayload = OpportunityPayload | ExecutionPayload | SafetyPayload | SystemPayload | any;
+
+interface EventItem {
+  event_id: string;
+  event_type: string;
+  source: string;
+  timestamp: { iso: string };
+  severity: string;
+  payload: EventPayload;
+}
+
 export default function LiveActivityPage() {
   const { events, isConnected } = useEventStream();
   const [filter, setFilter] = useState<string>('all');
 
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = events.filter((event: EventItem) => {
     if (filter === 'all') return true;
     return event.event_type === filter;
   });
@@ -61,18 +97,23 @@ export default function LiveActivityPage() {
     return new Date(timestamp).toLocaleTimeString();
   };
 
-  const formatEventDescription = (event: any) => {
+  const formatEventDescription = (event: EventItem) => {
     switch (event.event_type) {
       case 'opportunity.detected':
-        return `${event.payload.asset_in}/${event.payload.asset_out} spread: ${event.payload.spread_bps.toFixed(1)} bps`;
+        const oppPayload = event.payload as OpportunityPayload;
+        return `${oppPayload.asset_in}/${oppPayload.asset_out} spread: ${oppPayload.spread_bps?.toFixed(1)} bps`;
       case 'execution.confirmed':
-        return `Profit: $${event.payload.actual_profit?.toFixed(2)} | Gas: ${event.payload.actual_gas?.toFixed(4)} ETH`;
+        const execPayload = event.payload as ExecutionPayload;
+        return `Profit: $${execPayload.actual_profit?.toFixed(2)} | Gas: ${execPayload.actual_gas?.toFixed(4)} ETH`;
       case 'execution.reverted':
-        return `Reason: ${event.payload.revert_reason} | Gas used: ${event.payload.gas_used?.toFixed(4)} ETH`;
+        const revPayload = event.payload as ExecutionPayload;
+        return `Reason: ${revPayload.revert_reason} | Gas used: ${revPayload.gas_used?.toFixed(4)} ETH`;
       case 'safety.triggered':
-        return `${event.payload.trigger_type} - Action: ${event.payload.action_taken}`;
+        const safetyPayload = event.payload as SafetyPayload;
+        return `${safetyPayload.trigger_type} - Action: ${safetyPayload.action_taken}`;
       case 'system.status.changed':
-        return `${event.payload.previous_status} → ${event.payload.current_status}`;
+        const sysPayload = event.payload as SystemPayload;
+        return `${sysPayload.previous_status} → ${sysPayload.current_status}`;
       default:
         return JSON.stringify(event.payload);
     }
@@ -161,7 +202,7 @@ export default function LiveActivityPage() {
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
-                    {filteredEvents.slice(-100).reverse().map((event, index) => (
+                    {filteredEvents.slice(-100).reverse().map((event: EventItem, index: number) => (
                       <div
                         key={event.event_id}
                         className={`event-item ${getEventColor(event.event_type, event.severity)}`}
@@ -197,9 +238,9 @@ export default function LiveActivityPage() {
                             
                             <div className="flex items-center space-x-4 text-xs text-gray-500">
                               <span>Source: {event.source}</span>
-                              <span>Chain: {event.payload.chain || 'N/A'}</span>
-                              {event.payload.confidence_score && (
-                                <span>Confidence: {(event.payload.confidence_score * 100).toFixed(0)}%</span>
+                              <span>Chain: {(event.payload as any)?.chain || 'N/A'}</span>
+                              {(event.payload as any)?.confidence_score && (
+                                <span>Confidence: {((event.payload as any).confidence_score * 100).toFixed(0)}%</span>
                               )}
                             </div>
                           </div>
@@ -216,25 +257,25 @@ export default function LiveActivityPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-atom-info">
-                      {events.filter(e => e.event_type === 'opportunity.detected').length}
+                      {events.filter((e: EventItem) => e.event_type === 'opportunity.detected').length}
                     </div>
                     <div className="text-xs text-gray-400">Opportunities</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-atom-success">
-                      {events.filter(e => e.event_type === 'execution.confirmed').length}
+                      {events.filter((e: EventItem) => e.event_type === 'execution.confirmed').length}
                     </div>
                     <div className="text-xs text-gray-400">Confirmed</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-atom-error">
-                      {events.filter(e => e.event_type === 'execution.reverted').length}
+                      {events.filter((e: EventItem) => e.event_type === 'execution.reverted').length}
                     </div>
                     <div className="text-xs text-gray-400">Reverted</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-atom-warning">
-                      {events.filter(e => e.event_type === 'safety.triggered').length}
+                      {events.filter((e: EventItem) => e.event_type === 'safety.triggered').length}
                     </div>
                     <div className="text-xs text-gray-400">Safety</div>
                   </div>

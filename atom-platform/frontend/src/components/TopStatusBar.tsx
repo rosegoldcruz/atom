@@ -5,7 +5,6 @@ import { useSystemState } from '@/contexts/SystemStateContext';
 import { useEventStream } from '@/contexts/EventStreamContext';
 import { 
   WifiIcon, 
-  WifiSlashIcon,
   SignalIcon,
   ShieldCheckIcon,
   ShieldExclamationIcon 
@@ -61,7 +60,7 @@ export function TopStatusBar() {
             {isConnected ? (
               <WifiIcon className="w-4 h-4 text-atom-success" />
             ) : (
-              <WifiSlashIcon className="w-4 h-4 text-atom-error" />
+              <WifiIcon className="w-4 h-4 text-atom-error opacity-50" />
             )}
             <span className="text-sm text-gray-400">
               {isConnected ? 'Connected' : 'Disconnected'}

@@ -71,7 +71,10 @@ export function EventStreamProvider({ children }: EventStreamProviderProps) {
   }, [lastMessage]);
 
   const subscribe = (eventTypes: string[]) => {
-    setSubscribedEvents(prev => [...new Set([...prev, ...eventTypes])]);
+    setSubscribedEvents(prev => {
+      const combined = [...prev, ...eventTypes];
+      return Array.from(new Set(combined));
+    });
     sendMessage(JSON.stringify({
       type: 'subscribe',
       events: eventTypes

@@ -2,6 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { useEventStream } from '@/contexts/EventStreamContext';
+import { AtomEvent } from '../../../../shared/event-schema';
 import {
   ShieldCheckIcon,
   ShieldExclamationIcon,
@@ -10,6 +11,15 @@ import {
   XCircleIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
+
+interface SimulationPayload {
+  passes_constraints?: boolean;
+}
+
+interface SafetyPayload {
+  trigger_type?: string;
+  action_taken?: string;
+}
 
 export function RiskPanel() {
   const { events } = useEventStream();
@@ -20,35 +30,35 @@ export function RiskPanel() {
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
 
     // Recent safety triggers
-    const safetyTriggers = events.filter(e => 
+    const safetyTriggers = events.filter((e: AtomEvent) => 
       e.event_type === 'safety.triggered' &&
       e.timestamp.unix_ms > oneHourAgo
     );
 
     // Recent reverts
-    const reverts = events.filter(e => 
+    const reverts = events.filter((e: AtomEvent) => 
       e.event_type === 'execution.reverted' &&
       e.timestamp.unix_ms > oneDayAgo
     );
 
     // Recent rejected opportunities (simulations that failed constraints)
-    const simulations = events.filter(e => 
+    const simulations = events.filter((e: AtomEvent) => 
       e.event_type === 'simulation.completed' &&
       e.timestamp.unix_ms > oneHourAgo
     );
     
-    const rejectedOpportunities = simulations.filter(e => 
-      !e.payload.passes_constraints
+    const rejectedOpportunities = simulations.filter((e: AtomEvent) => 
+      !(e.payload as SimulationPayload).passes_constraints
     ).length;
 
     // Gas spike pauses
-    const gasSpikeTriggers = safetyTriggers.filter(e => 
-      e.payload.trigger_type === 'GAS_SPIKE'
+    const gasSpikeTriggers = safetyTriggers.filter((e: AtomEvent) => 
+      (e.payload as SafetyPayload).trigger_type === 'GAS_SPIKE'
     ).length;
 
     // MEV risk blocks
-    const mevRiskTriggers = safetyTriggers.filter(e => 
-      e.payload.trigger_type === 'MEV_RISK'
+    const mevRiskTriggers = safetyTriggers.filter((e: AtomEvent) => 
+      (e.payload as SafetyPayload).trigger_type === 'MEV_RISK'
     ).length;
 
     return {
@@ -165,26 +175,29 @@ export function RiskPanel() {
                 <p className="text-sm">No recent triggers</p>
               </div>
             ) : (
-              riskStats.recentTriggers.map((trigger, index) => (
-                <div key={index} className="flex items-center justify-between p-2 glass rounded">
-                  <div className="flex items-center space-x-2">
-                    <div className={`${getTriggerColor(trigger.payload.trigger_type)}`}>
-                      {getTriggerIcon(trigger.payload.trigger_type)}
+              riskStats.recentTriggers.map((trigger: AtomEvent, index: number) => {
+                const payload = trigger.payload as SafetyPayload;
+                return (
+                  <div key={index} className="flex items-center justify-between p-2 glass rounded">
+                    <div className="flex items-center space-x-2">
+                      <div className={`${getTriggerColor(payload.trigger_type || '')}`}>
+                        {getTriggerIcon(payload.trigger_type || '')}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">
+                          {(payload.trigger_type || '').replace('_', ' ')}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          Action: {payload.action_taken}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">
-                        {trigger.payload.trigger_type.replace('_', ' ')}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        Action: {trigger.payload.action_taken}
-                      </p>
+                    <div className="text-xs text-gray-500">
+                      {formatTimeAgo(trigger.timestamp.unix_ms)}
                     </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {formatTimeAgo(trigger.timestamp.unix_ms)}
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>

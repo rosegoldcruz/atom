@@ -2,6 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { useEventStream } from '@/contexts/EventStreamContext';
+import { AtomEvent } from '../../../../shared/event-schema';
 import {
   ClockIcon,
   CheckCircleIcon,
@@ -14,22 +15,22 @@ export function ExecutionSnapshot() {
   const { events } = useEventStream();
 
   const executionStats = useMemo(() => {
-    const recentExecutions = events.filter(e => 
+    const recentExecutions = events.filter((e: AtomEvent) => 
       e.event_type === 'execution.submitted' ||
       e.event_type === 'execution.confirmed' ||
       e.event_type === 'execution.reverted'
     );
 
-    const pending = recentExecutions.filter(e => e.event_type === 'execution.submitted').length;
-    const confirmed = recentExecutions.filter(e => e.event_type === 'execution.confirmed').length;
-    const reverted = recentExecutions.filter(e => e.event_type === 'execution.reverted').length;
+    const pending = recentExecutions.filter((e: AtomEvent) => e.event_type === 'execution.submitted').length;
+    const confirmed = recentExecutions.filter((e: AtomEvent) => e.event_type === 'execution.confirmed').length;
+    const reverted = recentExecutions.filter((e: AtomEvent) => e.event_type === 'execution.reverted').length;
 
     const recentConfirmed = events
-      .filter(e => e.event_type === 'execution.confirmed')
+      .filter((e: AtomEvent) => e.event_type === 'execution.confirmed')
       .slice(-1)[0];
 
     const recentReverted = events
-      .filter(e => e.event_type === 'execution.reverted')
+      .filter((e: AtomEvent) => e.event_type === 'execution.reverted')
       .slice(-1)[0];
 
     return {
@@ -38,7 +39,8 @@ export function ExecutionSnapshot() {
       reverted,
       recentConfirmed,
       recentReverted,
-      total: recentExecutions.length
+      total: recentExecutions.length,
+      successRate: recentExecutions.length > 0 ? (confirmed / recentExecutions.length) * 100 : 0
     };
   }, [events]);
 
@@ -112,10 +114,10 @@ export function ExecutionSnapshot() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-atom-success">
-                    +${executionStats.recentConfirmed.payload.actual_profit?.toFixed(2)}
+                    +${(executionStats.recentConfirmed.payload as any).actual_profit?.toFixed(2)}
                   </p>
                   <p className="text-xs text-gray-400">
-                    {executionStats.recentConfirmed.payload.fees?.gas?.toFixed(4)} ETH
+                    {((executionStats.recentConfirmed.payload as any).fees?.flash || 0).toFixed(4)} ETH
                   </p>
                 </div>
               </div>
@@ -137,10 +139,10 @@ export function ExecutionSnapshot() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-atom-error">
-                    {executionStats.recentReverted.payload.revert_reason}
+                    {(executionStats.recentReverted.payload as any).revert_reason}
                   </p>
                   <p className="text-xs text-gray-400">
-                    {executionStats.recentReverted.payload.gas_used?.toFixed(4)} ETH
+                    {(executionStats.recentReverted.payload as any).gas_used?.toFixed(4)} ETH
                   </p>
                 </div>
               </div>
