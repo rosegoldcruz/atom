@@ -28,7 +28,7 @@
     "date-fns": "^2.30.0",
     "clsx": "^2.0.0",
     "framer-motion": "^10.16.5",
-    "use-websocket": "^0.2.0",
+    "react-use-websocket": "^4.13.0",
     "zustand": "^4.4.7",
     "react-hot-toast": "^2.4.1",
     "@rainbow-me/rainbowkit": "^1.2.0",
