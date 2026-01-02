@@ -83,6 +83,10 @@ dist
 .cache/
 public
 
+# Allow frontend public assets
+!/frontend/public/
+!/frontend/public/**
+
 # Storybook build outputs
 .out
 .storybook-out
