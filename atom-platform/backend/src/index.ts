@@ -9,18 +9,15 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
-import dotenv from 'dotenv';
 
 import { logger } from './utils/logger';
+import { config, configService } from './utils/config';
 import { eventBus } from './services/event-bus';
 import { MarketDataService } from './services/market-data';
 import { SimulationEngine } from './services/simulation';
 import { OrchestratorService } from './services/orchestrator';
 import { ExecutionBotService } from './services/execution-bot';
 import { SafetyMonitorService } from './services/safety-monitor';
-
-// Load environment variables
-dotenv.config();
 
 class ATOMBackend {
   private app = express();

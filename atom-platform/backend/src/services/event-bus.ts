@@ -7,14 +7,14 @@
 import { EventEmitter } from 'events';
 import Redis from 'redis';
 import { Kafka, Producer, Consumer } from 'kafkajs';
-import { v7 as uuidv7 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { EventEnvelope, AtomEvent, EVENT_SCHEMAS, EventType } from '../../../shared/event-schema';
 import { logger } from '../utils/logger';
 
 export class EventBusService extends EventEmitter {
-  private redis: Redis.RedisClientType;
-  private kafka: Kafka;
-  private producer: Producer;
+  private redis!: Redis.RedisClientType;
+  private kafka!: Kafka;
+  private producer!: Producer;
   private consumers: Map<string, Consumer> = new Map();
   private isConnected = false;
   private eventBuffer: EventEnvelope[] = [];
@@ -29,18 +29,13 @@ export class EventBusService extends EventEmitter {
   private setupRedis(): void {
     this.redis = Redis.createClient({
       url: process.env.REDIS_URL || 'redis://localhost:6379',
-      retry_strategy: (options: any) => {
-        if (options.error && options.error.code === 'ECONNREFUSED') {
-          logger.error('Redis server connection refused');
-          return new Error('Redis server connection refused');
+      socket: {
+        reconnectStrategy: (retries) => {
+          if (retries > 10) {
+            return new Error('Max retries exceeded');
+          }
+          return Math.min(retries * 100, 3000);
         }
-        if (options.total_retry_time > 1000 * 60 * 60) {
-          return new Error('Retry time exhausted');
-        }
-        if (options.attempt > 10) {
-          return undefined;
-        }
-        return Math.min(options.attempt * 100, 3000);
       }
     });
 
@@ -118,12 +113,15 @@ export class EventBusService extends EventEmitter {
    */
   async appendEvent(event: Omit<AtomEvent, 'event_id' | 'timestamp'>): Promise<EventEnvelope> {
     const eventEnvelope: EventEnvelope = {
-      ...event,
-      event_id: uuidv7(),
+      event_id: uuidv4(),
+      event_type: event.event_type,
+      event_version: event.event_version,
+      source: event.source,
+      severity: event.severity,
+      payload: event.payload,
       timestamp: {
         iso: new Date().toISOString(),
-        unix_ms: Date.now(),
-        ...event.timestamp
+        unix_ms: Date.now()
       }
     };
 
@@ -299,6 +297,21 @@ export class EventBusService extends EventEmitter {
     }
     
     this.eventBuffer = [];
+  }
+
+  /**
+   * Get status of the event bus
+   */
+  getStatus(): {
+    isConnected: boolean;
+    bufferedEvents: number;
+    activeConsumers: number;
+  } {
+    return {
+      isConnected: this.isConnected,
+      bufferedEvents: this.eventBuffer.length,
+      activeConsumers: this.consumers.size
+    };
   }
 }
 

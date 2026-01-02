@@ -9,7 +9,7 @@
 import { ethers } from 'ethers';
 import { EventBusService } from './event-bus';
 import { logger } from '../utils/logger';
-import { v7 as uuidv7 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ExecutionRequest {
   executionId: string;
@@ -231,6 +231,7 @@ export class ExecutionBotService {
     
     await this.eventBus.appendEvent({
       event_type: 'execution.confirmed',
+      event_version: '1.0',
       source: 'bot',
       severity: 'success',
       payload: {
@@ -256,6 +257,7 @@ export class ExecutionBotService {
     
     await this.eventBus.appendEvent({
       event_type: 'execution.reverted',
+      event_version: '1.0',
       source: 'bot',
       severity: 'warning',
       payload: {
@@ -274,6 +276,7 @@ export class ExecutionBotService {
   private async handleExecutionError(request: ExecutionRequest, error: Error): Promise<void> {
     await this.eventBus.appendEvent({
       event_type: 'execution.reverted',
+      event_version: '1.0',
       source: 'bot',
       severity: 'error',
       payload: {
@@ -308,6 +311,7 @@ export class ExecutionBotService {
       // Emit bot state changed event
       this.eventBus.appendEvent({
         event_type: 'bot.state.changed',
+        event_version: '1.0',
         source: 'bot',
         severity: state === 'ERROR' ? 'error' : 'info',
         payload: {

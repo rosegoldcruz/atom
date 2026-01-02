@@ -172,7 +172,8 @@ export class SafetyMonitorService {
     } catch (error) {
       logger.error('Safety check failed:', error);
       // Conservative approach - trigger safety on error
-      this.triggerSafety('MONITOR_ERROR', 'HIGH', { error: error.message });
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.triggerSafety('MONITOR_ERROR', 'HIGH', { error: errorMessage });
     }
   }
 
@@ -235,7 +236,7 @@ export class SafetyMonitorService {
 
   private checkExecutionLatency(): void {
     if (this.safetyMetrics.averageLatency > this.safetyThresholds.executionLatency) {
-      this.triggerSafety('EXECUTION_LATENCY', 'LOW', {
+      this.triggerSafety('MONITOR_ERROR', 'LOW', {
         averageLatency: this.safetyMetrics.averageLatency,
         threshold: this.safetyThresholds.executionLatency
       });
@@ -256,7 +257,7 @@ export class SafetyMonitorService {
       const declinePercent = ((olderAvg - recentAvg) / olderAvg) * 100;
       
       if (declinePercent > this.safetyThresholds.profitDecline) {
-        this.triggerSafety('PROFIT_DECLINE', 'MEDIUM', {
+        this.triggerSafety('MONITOR_ERROR', 'MEDIUM', {
           declinePercent,
           recentAvg,
           olderAvg,
@@ -268,7 +269,7 @@ export class SafetyMonitorService {
     }
   }
 
-  private triggerSafety(type: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL', data: any): void {
+  private triggerSafety(type: 'GAS_SPIKE' | 'MEV_RISK' | 'REVERT_STREAK' | 'MONITOR_ERROR', severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL', data: any): void {
     const timestamp = Date.now();
     
     // Check cooldown period
@@ -291,7 +292,7 @@ export class SafetyMonitorService {
     }
     
     // Determine action based on severity
-    let actionTaken: 'PAUSE' | 'COOLDOWN' | 'ALERT' = 'ALERT';
+    let actionTaken: 'PAUSE' | 'COOLDOWN' = 'COOLDOWN';
     
     if (severity === 'CRITICAL') {
       actionTaken = 'PAUSE';
@@ -306,10 +307,11 @@ export class SafetyMonitorService {
     // Emit safety triggered event
     this.eventBus.appendEvent({
       event_type: 'safety.triggered',
+      event_version: '1.0',
       source: 'system',
       severity: severity.toLowerCase() as any,
       payload: {
-        trigger_type: type,
+        trigger_type: (type === 'MONITOR_ERROR' ? 'REVERT_STREAK' : type) as 'GAS_SPIKE' | 'MEV_RISK' | 'REVERT_STREAK',
         threshold: `${data.threshold || 'unknown'}`,
         action_taken: actionTaken
       }

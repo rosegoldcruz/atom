@@ -8,7 +8,7 @@
 
 import { EventBusService } from './event-bus';
 import { logger } from '../utils/logger';
-import { v7 as uuidv7 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface GlobalLimits {
   maxDailyExecutions: number;
@@ -157,7 +157,7 @@ export class OrchestratorService {
       logger.debug(`Execution rejected: ${canExecute.reason} for ${opportunityId}`);
       
       // Trigger safety if needed
-      if (canExecute.triggerSafety) {
+      if (canExecute.triggerSafety && canExecute.reason) {
         await this.triggerSafety(canExecute.reason);
       }
     }
@@ -230,7 +230,7 @@ export class OrchestratorService {
   }
 
   private async submitExecution(opportunityId: string, simulationResult: any): Promise<void> {
-    const executionId = uuidv7();
+    const executionId = uuidv4();
     
     // Update stats
     this.stats.activeExecutions++;
@@ -241,6 +241,7 @@ export class OrchestratorService {
     // Emit execution submitted event
     await this.eventBus.appendEvent({
       event_type: 'execution.submitted',
+      event_version: '1.0',
       source: 'orchestrator',
       severity: 'info',
       payload: {
@@ -288,6 +289,7 @@ export class OrchestratorService {
   private async triggerSafety(reason: string): Promise<void> {
     await this.eventBus.appendEvent({
       event_type: 'safety.triggered',
+      event_version: '1.0',
       source: 'orchestrator',
       severity: 'critical',
       payload: {
@@ -306,6 +308,7 @@ export class OrchestratorService {
     
     await this.eventBus.appendEvent({
       event_type: 'system.status.changed',
+      event_version: '1.0',
       source: 'orchestrator',
       severity: status === 'PROTECTED' ? 'critical' : 'warning',
       payload: {

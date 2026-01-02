@@ -8,20 +8,20 @@
 import { ethers } from 'ethers';
 import { EventBusService } from './event-bus';
 import { logger } from '../utils/logger';
-import { v7 as uuidv7 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface PoolState {
   address: string;
   token0: string;
   token1: string;
-  reserve0: ethers.BigNumber;
-  reserve1: ethers.BigNumber;
+  reserve0: bigint;
+  reserve1: bigint;
   fee: number;
   blockNumber: number;
 }
 
 export interface ArbitragePath {
-  chain: string;
+  chain: 'ethereum' | 'arbitrum' | 'base' | 'polygon';
   dexPath: string[];
   assetIn: string;
   assetOut: string;
@@ -156,7 +156,7 @@ export class MarketDataService {
         const confidenceScore = 0.7 + Math.random() * 0.3; // 70-100% confidence
         
         opportunities.push({
-          chain,
+          chain: chain as 'ethereum' | 'arbitrum' | 'base' | 'polygon',
           dexPath: [
             dexes[Math.floor(Math.random() * dexes.length)],
             dexes[Math.floor(Math.random() * dexes.length)]
@@ -174,10 +174,11 @@ export class MarketDataService {
   }
 
   private async emitOpportunity(opportunity: ArbitragePath): Promise<void> {
-    const opportunityId = uuidv7();
+    const opportunityId = uuidv4();
     
     await this.eventBus.appendEvent({
       event_type: 'opportunity.detected',
+      event_version: '1.0',
       source: 'agent',
       severity: 'info',
       payload: {
@@ -223,7 +224,7 @@ export class MarketDataService {
   calculateArbitrage(
     pool1: PoolState,
     pool2: PoolState,
-    amountIn: ethers.BigNumber
+    amountIn: bigint
   ): { profit: number; gasEstimate: number } | null {
     try {
       // Simplified arbitrage calculation

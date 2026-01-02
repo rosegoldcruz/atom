@@ -7,7 +7,7 @@
 
 import { EventBusService } from './event-bus';
 import { logger } from '../utils/logger';
-import { v7 as uuidv7 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { ethers } from 'ethers';
 
 export interface SimulationParams {
@@ -146,11 +146,12 @@ export class SimulationEngine {
     amount: number;
     params: SimulationParams;
   }): Promise<void> {
-    const simulationId = uuidv7();
+    const simulationId = uuidv4();
     
     // Emit simulation started
     await this.eventBus.appendEvent({
       event_type: 'simulation.started',
+      event_version: '1.0',
       source: 'agent',
       severity: 'info',
       payload: {
@@ -169,6 +170,7 @@ export class SimulationEngine {
       // Emit simulation completed
       await this.eventBus.appendEvent({
         event_type: 'simulation.completed',
+        event_version: '1.0',
         source: 'agent',
         severity: result.passesConstraints ? 'success' : 'warning',
         payload: {
@@ -189,6 +191,7 @@ export class SimulationEngine {
       // Emit failed simulation
       await this.eventBus.appendEvent({
         event_type: 'simulation.completed',
+        event_version: '1.0',
         source: 'agent',
         severity: 'error',
         payload: {

@@ -3,7 +3,54 @@
 > **ATOM is not a crypto exchange. It’s a live arbitrage automation platform for normal people.**
 
 ATOM transforms complex DeFi arbitrage into a visible, controllable, and safety-first experience where users allocate capital and observe execution in real time.
+## 🚀 Quick Start
 
+### Prerequisites
+- Node.js 18+
+- Redis (for event streaming)
+- PostgreSQL (optional, for analytics)
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure Environment
+
+```bash
+# Copy the example env file
+cp .env.example .env
+
+# Edit .env with your configuration
+# ⚠️ NEVER commit your .env file!
+```
+
+**🔐 SECURITY CRITICAL:** Read [SECURITY_WARNING.md](./SECURITY_WARNING.md) before proceeding!
+
+### 3. Build the Project
+
+```bash
+npm run build
+```
+
+### 4. Start Development Servers
+
+```bash
+npm run dev
+```
+
+This starts:
+- **Backend**: http://localhost:3001
+- **Frontend**: http://localhost:3001 (or 3002 if 3001 is taken)
+
+## 📱 Mobile-First Design
+
+All pages are optimized for mobile with:
+- ✅ Large touch targets (44x44px minimum)
+- ✅ Responsive layouts
+- ✅ Premium dark theme
+- ✅ Clear typography
 ## 🎯 What Makes ATOM Different
 
 - **Live Transparency**: Real-time execution visibility - you see everything happening
