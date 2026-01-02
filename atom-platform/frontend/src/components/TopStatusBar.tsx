@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useSystemState } from '@/contexts/SystemStateContext';
 import { useEventStream } from '@/contexts/EventStreamContext';
 import { 
@@ -47,9 +49,22 @@ export function TopStatusBar() {
   return (
     <div className="glass-dark px-3 py-2 sm:px-6 sm:py-3 border-b border-white border-opacity-10">
       {/* Mobile Layout - Compact */}
-      <div className="flex items-center justify-between md:hidden">
-        {/* Left - System Status (Prominent) */}
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between md:hidden gap-3">
+        {/* Logo left */}
+        <Link href="/" className="flex items-center space-x-2 active:opacity-90">
+          <Image
+            src="/atom-Logo.png"
+            alt="ATOM logo"
+            width={56}
+            height={56}
+            className="w-14 h-14 object-contain drop-shadow-lg"
+            priority
+          />
+          <span className="text-white font-extrabold text-xl tracking-tight">ATOM</span>
+        </Link>
+
+        {/* Center - System Status (Prominent) */}
+        <div className="flex items-center space-x-2 flex-1 justify-center">
           {getStatusIcon()}
           <span className={`text-sm font-bold ${getStatusColor()}`}>
             {systemState.status}
@@ -57,7 +72,7 @@ export function TopStatusBar() {
         </div>
 
         {/* Right - Connection + Gas */}
-        <div className="flex items-center space-x-3 text-xs">
+        <div className="flex items-center space-x-2 text-xs">
           <div className="flex items-center space-x-1">
             <WifiIcon className={`w-3 h-3 ${isConnected ? 'text-atom-success' : 'text-atom-error'}`} />
           </div>
@@ -69,8 +84,20 @@ export function TopStatusBar() {
 
       {/* Desktop Layout - Full Info */}
       <div className="hidden md:flex items-center justify-between">
-        {/* Left side - System status */}
-        <div className="flex items-center space-x-6">
+        {/* Left side - Logo + System status */}
+        <div className="flex items-center space-x-8">
+          <Link href="/" className="flex items-center space-x-3 group">
+            <Image
+              src="/atom-Logo.png"
+              alt="ATOM logo"
+              width={64}
+              height={64}
+              className="w-16 h-16 object-contain drop-shadow-xl group-active:opacity-90"
+              priority
+            />
+            <span className="text-white font-extrabold text-2xl tracking-tight">ATOM</span>
+          </Link>
+
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2">
               {getStatusIcon()}

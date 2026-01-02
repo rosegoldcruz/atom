@@ -62,7 +62,7 @@ export function SideNav() {
       </div>
 
       {/* MOBILE HAMBURGER MENU - Secondary Nav */}
-      <div className="md:hidden fixed top-3 left-3 z-50">
+      <div className="md:hidden fixed top-3 right-3 z-50">
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="p-2 glass-dark rounded-lg text-white active:bg-opacity-30 transition-all"
