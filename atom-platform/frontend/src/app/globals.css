@@ -32,29 +32,50 @@ body {
   background: linear-gradient(135deg, var(--atom-primary) 0%, var(--atom-secondary) 100%);
   color: #ffffff;
   min-height: 100vh;
+  /* Better font rendering on mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent text size adjustment on mobile */
+  -webkit-text-size-adjust: 100%;
+  /* Smoother scrolling on mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
   background-attachment: fixed;
+  /* Prevent bounce scroll on iOS */
+  overscroll-behavior-y: none;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Mobile optimized */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+  height: 4px;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 /* Glass morphism effect */
@@ -146,17 +167,27 @@ body {
   animation: slideIn 0.6s ease-out;
 }
 
-/* Custom components */
+/* Custom components - Mobile First */
 .card {
-  @apply glass p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl;
+  @apply glass p-4 sm:p-6 rounded-xl shadow-lg transition-all duration-300 active:shadow-2xl;
 }
 
-.card:hover {
-  transform: translateY(-2px);
+.card:active {
+  transform: translateY(-1px);
+}
+
+@media (min-width: 768px) {
+  .card:hover {
+    transform: translateY(-2px);
+    @apply shadow-xl;
+  }
 }
 
 .button {
-  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-sm sm:text-base;
+  /* Large touch target for mobile */
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .button-primary {
@@ -179,22 +210,31 @@ body {
   @apply button bg-atom-error text-white hover:bg-opacity-90;
 }
 
-/* Form styles */
+/* Form styles - Mobile optimized */
 .input {
-  @apply w-full px-4 py-3 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-atom-highlight focus:border-transparent;
+  @apply w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-atom-highlight focus:border-transparent text-sm sm:text-base;
+  /* Better touch target */
+  min-height: 44px;
 }
 
 .select {
   @apply input appearance-none bg-no-repeat;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 0.5rem center;
+  padding-right: 2.5rem;
 }
 
 /* Data visualization */
 .chart-container {
-  @apply glass p-4 rounded-xl;
+  @apply glass- Mobile optimized */
+.event-item {
+  @apply p-3 sm:p-4 mb-2 glass rounded-lg border-l-4 transition-all duration-200 active:bg-opacity-20;
 }
 
+@media (min-width: 768px) {
+  .event-item:hover {
+    @apply bg-opacity-20;
+  }
 /* Event feed */
 .event-item {
   @apply p-4 mb-2 glass rounded-lg border-l-4 transition-all duration-200 hover:bg-opacity-20;
@@ -207,13 +247,46 @@ body {
 .event-warning {
   @apply event-item border-atom-warning;
 }
-
-.event-error {
-  @apply event-item border-atom-error;
+/* Navigation - Mobile optimized */
+.nav-item {
+  @apply flex items-center px-3 py-2.5 sm:px-4 sm:py-3 text-gray-300 active:text-white active:bg-white active:bg-opacity-10 rounded-lg transition-all duration-200;
+  /* Better touch targets */
+  min-height: 44px;
 }
 
-.event-info {
-  @apply event-item border-atom-info;
+@media (min-width: 768px) {
+  .nav-item:hover {
+    @apply text-white bg- Mobile First */
+@media (max-width: 640px) {
+  .card {
+    @apply p-3;
+  }
+  
+  .button {
+    @apply px-3 py-2 text-sm;
+  }
+  
+  /* Optimize scrollbars for mobile */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .card {
+    @apply p-4;
+  }
+}
+
+/* Touch-friendly click targets */
+@media (hover: none) and (pointer: coarse) {
+  /* Mobile devices - larger touch targets */
+  button, a, .clickable {
+    min-height: 44px;
+    min-width: 44px
+/* Safe area for mobile notches/bottom bars */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Navigation */

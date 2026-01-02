@@ -99,33 +99,31 @@ export function OverviewCards() {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
       {cards.map((card, index) => {
         const Icon = card.icon;
         
         return (
-          <div key={index} className="card">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-lg bg-white bg-opacity-10 ${card.color}`}>
-                  <Icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-sm font-medium text-gray-400">{card.title}</h3>
+          <div key={index} className="card p-3 sm:p-4">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <div className={`p-1.5 sm:p-2 rounded-lg bg-white bg-opacity-10 ${card.color}`}>
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </div>
             
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-white">{card.value}</div>
+            <div className="space-y-1 sm:space-y-2">
+              <h3 className="text-[10px] sm:text-xs font-medium text-gray-400">{card.title}</h3>
+              <div className="text-base sm:text-xl md:text-2xl font-bold text-white">{card.value}</div>
               {card.change && (
-                <div className={`flex items-center text-sm ${
+                <div className={`flex items-center text-[10px] sm:text-xs ${
                   card.changeType === 'positive' ? 'text-atom-success' : 'text-atom-error'
                 }`}>
                   {card.changeType === 'positive' ? (
-                    <ArrowTrendingUpIcon className="w-4 h-4 mr-1" />
+                    <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
                   ) : (
-                    <ArrowTrendingDownIcon className="w-4 h-4 mr-1" />
+                    <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
                   )}
-                  {card.change}
+                  <span className="truncate">{card.change}</span>
                 </div>
               )}
             </div>

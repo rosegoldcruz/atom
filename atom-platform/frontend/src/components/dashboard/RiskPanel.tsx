@@ -110,89 +110,89 @@ export function RiskPanel() {
   };
 
   return (
-    <div className="card">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white">Risk Shield</h2>
-        <ShieldCheckIcon className="w-6 h-6 text-atom-success" />
+    <div className="card p-4 sm:p-6">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 className="text-base sm:text-lg md:text-xl font-bold text-white">Risk Shield</h2>
+        <ShieldCheckIcon className="w-5 h-5 sm:w-6 sm:h-6 text-atom-success" />
       </div>
 
-      <div className="space-y-6">
-        {/* Protection Metrics */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="glass p-4 rounded-lg">
-            <div className="flex items-center space-x-2 mb-2">
-              <CheckCircleIcon className="w-5 h-5 text-atom-success" />
-              <span className="text-sm text-gray-400">Protected</span>
+      <div className="space-y-4 sm:space-y-6">
+        {/* Protection Metrics - Mobile 2x2 grid */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+          <div className="glass p-2 sm:p-3 md:p-4 rounded-lg">
+            <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+              <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 text-atom-success" />
+              <span className="text-[10px] sm:text-xs text-gray-400">Protected</span>
             </div>
-            <div className="text-2xl font-bold text-atom-success">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-atom-success">
               {riskStats.reverts}
             </div>
-            <div className="text-xs text-gray-500">Trades reverted</div>
+            <div className="text-[9px] sm:text-xs text-gray-500">Reverted</div>
           </div>
 
-          <div className="glass p-4 rounded-lg">
-            <div className="flex items-center space-x-2 mb-2">
-              <ExclamationTriangleIcon className="w-5 h-5 text-atom-warning" />
-              <span className="text-sm text-gray-400">Blocked</span>
+          <div className="glass p-2 sm:p-3 md:p-4 rounded-lg">
+            <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+              <ExclamationTriangleIcon className="w-4 h-4 sm:w-5 sm:h-5 text-atom-warning" />
+              <span className="text-[10px] sm:text-xs text-gray-400">Blocked</span>
             </div>
-            <div className="text-2xl font-bold text-atom-warning">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-atom-warning">
               {riskStats.rejectedOpportunities}
             </div>
-            <div className="text-xs text-gray-500">Unsafe ops</div>
+            <div className="text-[9px] sm:text-xs text-gray-500">Unsafe</div>
           </div>
 
-          <div className="glass p-4 rounded-lg">
-            <div className="flex items-center space-x-2 mb-2">
-              <ClockIcon className="w-5 h-5 text-atom-info" />
-              <span className="text-sm text-gray-400">Paused</span>
+          <div className="glass p-2 sm:p-3 md:p-4 rounded-lg">
+            <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+              <ClockIcon className="w-4 h-4 sm:w-5 sm:h-5 text-atom-info" />
+              <span className="text-[10px] sm:text-xs text-gray-400">Paused</span>
             </div>
-            <div className="text-2xl font-bold text-atom-info">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-atom-info">
               {riskStats.gasSpikePauses}
             </div>
-            <div className="text-xs text-gray-500">Gas spikes</div>
+            <div className="text-[9px] sm:text-xs text-gray-500">Gas</div>
           </div>
 
-          <div className="glass p-4 rounded-lg">
-            <div className="flex items-center space-x-2 mb-2">
-              <ShieldExclamationIcon className="w-5 h-5 text-atom-error" />
-              <span className="text-sm text-gray-400">MEV Risk</span>
+          <div className="glass p-2 sm:p-3 md:p-4 rounded-lg">
+            <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+              <ShieldExclamationIcon className="w-4 h-4 sm:w-5 sm:h-5 text-atom-error" />
+              <span className="text-[10px] sm:text-xs text-gray-400">MEV</span>
             </div>
-            <div className="text-2xl font-bold text-atom-error">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-atom-error">
               {riskStats.mevRiskBlocks}
             </div>
-            <div className="text-xs text-gray-500">Risk blocks</div>
+            <div className="text-[9px] sm:text-xs text-gray-500">Blocks</div>
           </div>
         </div>
 
-        {/* Recent Triggers */}
-        <div className="border-t border-white border-opacity-10 pt-4">
-          <h3 className="text-sm font-medium text-gray-400 mb-3">Recent Safety Triggers</h3>
+        {/* Recent Triggers - Mobile compact */}
+        <div className="border-t border-white border-opacity-10 pt-3 sm:pt-4">
+          <h3 className="text-xs sm:text-sm font-medium text-gray-400 mb-2 sm:mb-3">Recent Triggers</h3>
           
           <div className="space-y-2 max-h-32 overflow-y-auto">
             {riskStats.recentTriggers.length === 0 ? (
-              <div className="text-center py-4 text-gray-500">
-                <ShieldCheckIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No recent triggers</p>
+              <div className="text-center py-3 sm:py-4 text-gray-500">
+                <ShieldCheckIcon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-xs sm:text-sm">No recent triggers</p>
               </div>
             ) : (
               riskStats.recentTriggers.map((trigger: AtomEvent, index: number) => {
                 const payload = trigger.payload as SafetyPayload;
                 return (
                   <div key={index} className="flex items-center justify-between p-2 glass rounded">
-                    <div className="flex items-center space-x-2">
-                      <div className={`${getTriggerColor(payload.trigger_type || '')}`}>
+                    <div className="flex items-center space-x-2 min-w-0">
+                      <div className={`${getTriggerColor(payload.trigger_type || '')} flex-shrink-0`}>
                         {getTriggerIcon(payload.trigger_type || '')}
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-white">
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-medium text-white truncate">
                           {(payload.trigger_type || '').replace('_', ' ')}
                         </p>
-                        <p className="text-xs text-gray-400">
-                          Action: {payload.action_taken}
+                        <p className="text-[10px] sm:text-xs text-gray-400 truncate">
+                          {payload.action_taken}
                         </p>
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-[10px] sm:text-xs text-gray-500 flex-shrink-0 ml-2">
                       {formatTimeAgo(trigger.timestamp.unix_ms)}
                     </div>
                   </div>

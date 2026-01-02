@@ -130,53 +130,53 @@ export default function LiveActivityPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-atom-primary to-atom-secondary">
+    <div className="min-h-screen bg-gradient-to-br from-atom-primary to-atom-secondary pb-20">
       <div className="flex h-screen">
-        {/* Sidebar */}
+        {/* Mobile bottom nav */}
         <SideNav />
         
         {/* Main content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Top status bar */}
           <TopStatusBar />
           
-          {/* Main content area */}
-          <main className="flex-1 overflow-y-auto p-6">
+          {/* Main content area - Mobile optimized */}
+          <main className="flex-1 overflow-y-auto px-3 py-4 sm:p-6">
             <div className="max-w-7xl mx-auto">
-              {/* Header */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between">
+              {/* Header - Compact mobile */}
+              <div className="mb-4 sm:mb-6">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">
-                      Live Activity Feed
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1">
+                      Live Activity
                     </h1>
-                    <p className="text-gray-400">
-                      Real-time event stream from the ATOM platform
+                    <p className="text-xs sm:text-sm text-gray-400">
+                      Real-time event stream
                     </p>
                   </div>
                   
-                  {/* Connection Status */}
+                  {/* Connection Status - Mobile friendly */}
                   <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${
+                    <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${
                       isConnected ? 'bg-atom-success animate-pulse' : 'bg-atom-error'
                     }`} />
-                    <span className="text-sm text-gray-400">
-                      {isConnected ? 'Live Stream' : 'Disconnected'}
+                    <span className="text-xs sm:text-sm text-gray-400">
+                      {isConnected ? 'Live' : 'Offline'}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Filter */}
-              <div className="mb-6">
-                <div className="flex items-center space-x-4">
-                  <label className="text-sm font-medium text-gray-400">
-                    Filter Events:
+              {/* Filter - Mobile optimized */}
+              <div className="mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                  <label className="text-xs sm:text-sm font-medium text-gray-400">
+                    Filter:
                   </label>
                   <select
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
-                    className="select text-sm"
+                    className="select text-xs sm:text-sm flex-1 sm:flex-none"
                   >
                     {eventTypes.map(type => (
                       <option key={type.value} value={type.value}>
@@ -185,62 +185,53 @@ export default function LiveActivityPage() {
                     ))}
                   </select>
                   
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span>Showing {filteredEvents.length} events</span>
+                  <div className="text-xs sm:text-sm text-gray-400">
+                    {filteredEvents.length} events
                   </div>
                 </div>
               </div>
 
-              {/* Event Feed */}
+              {/* Event Feed - Mobile optimized */}
               <div className="space-y-2">
                 {filteredEvents.length === 0 ? (
-                  <div className="text-center py-12">
-                    <SignalIcon className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-                    <p className="text-gray-400 text-lg">
-                      {isConnected ? 'Waiting for events...' : 'Connecting to event stream...'}
+                  <div className="text-center py-8 sm:py-12">
+                    <SignalIcon className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 text-gray-600" />
+                    <p className="text-gray-400 text-sm sm:text-lg">
+                      {isConnected ? 'Waiting for events...' : 'Connecting...'}
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
+                  <div className="space-y-2 max-h-[calc(100vh-250px)] overflow-y-auto">
                     {filteredEvents.slice(-100).reverse().map((event: EventItem, index: number) => (
                       <div
                         key={event.event_id}
-                        className={`event-item ${getEventColor(event.event_type, event.severity)}`}
+                        className={`event-item ${getEventColor(event.event_type, event.severity)} p-3 sm:p-4`}
                       >
-                        <div className="flex items-start space-x-3">
+                        <div className="flex items-start space-x-2 sm:space-x-3">
                           <div className={`flex-shrink-0 ${getEventColor(event.event_type, event.severity).split(' ')[1]}`}>
                             {getEventIcon(event.event_type)}
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <p className="text-sm font-medium text-white capitalize">
+                            <div className="flex items-center justify-between mb-1 gap-2">
+                              <p className="text-xs sm:text-sm font-medium text-white capitalize truncate">
                                 {event.event_type.replace('.', ' ')}
                               </p>
-                              <div className="flex items-center space-x-2">
-                                <span className="text-xs text-gray-400">
+                              <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                                <span className="text-[10px] sm:text-xs text-gray-400">
                                   {formatTime(event.timestamp.iso)}
-                                </span>
-                                <span className={`text-xs px-2 py-1 rounded ${
-                                  event.severity === 'success' ? 'bg-green-600' :
-                                  event.severity === 'error' ? 'bg-red-600' :
-                                  event.severity === 'warning' ? 'bg-yellow-600' :
-                                  'bg-gray-600'
-                                }`}>
-                                  {event.severity}
                                 </span>
                               </div>
                             </div>
                             
-                            <p className="text-sm text-gray-300 mb-2">
+                            <p className="text-xs sm:text-sm text-gray-300 mb-1 sm:mb-2">
                               {formatEventDescription(event)}
                             </p>
                             
-                            <div className="flex items-center space-x-4 text-xs text-gray-500">
-                              <span>Source: {event.source}</span>
-                              <span>Chain: {(event.payload as any)?.chain || 'N/A'}</span>
-                              {(event.payload as any)?.confidence_score && (
-                                <span>Confidence: {((event.payload as any).confidence_score * 100).toFixed(0)}%</span>
+                            <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-[10px] sm:text-xs text-gray-500">
+                              <span className="truncate">{event.source}</span>
+                              {(event.payload as any)?.chain && (
+                                <span>{(event.payload as any).chain}</span>
                               )}
                             </div>
                           </div>
@@ -251,33 +242,33 @@ export default function LiveActivityPage() {
                 )}
               </div>
 
-              {/* Event Summary */}
-              <div className="mt-8 card">
-                <h2 className="text-xl font-bold text-white mb-4">Event Summary</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Event Summary - Mobile grid */}
+              <div className="mt-6 sm:mt-8 card p-4 sm:p-6">
+                <h2 className="text-base sm:text-xl font-bold text-white mb-3 sm:mb-4">Summary</h2>
+                <div className="grid grid-cols-4 gap-2 sm:gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-atom-info">
+                    <div className="text-lg sm:text-2xl font-bold text-atom-info">
                       {events.filter((e: EventItem) => e.event_type === 'opportunity.detected').length}
                     </div>
-                    <div className="text-xs text-gray-400">Opportunities</div>
+                    <div className="text-[10px] sm:text-xs text-gray-400">Opps</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-atom-success">
+                    <div className="text-lg sm:text-2xl font-bold text-atom-success">
                       {events.filter((e: EventItem) => e.event_type === 'execution.confirmed').length}
                     </div>
-                    <div className="text-xs text-gray-400">Confirmed</div>
+                    <div className="text-[10px] sm:text-xs text-gray-400">Done</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-atom-error">
+                    <div className="text-lg sm:text-2xl font-bold text-atom-error">
                       {events.filter((e: EventItem) => e.event_type === 'execution.reverted').length}
                     </div>
-                    <div className="text-xs text-gray-400">Reverted</div>
+                    <div className="text-[10px] sm:text-xs text-gray-400">Failed</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-atom-warning">
+                    <div className="text-lg sm:text-2xl font-bold text-atom-warning">
                       {events.filter((e: EventItem) => e.event_type === 'safety.triggered').length}
                     </div>
-                    <div className="text-xs text-gray-400">Safety</div>
+                    <div className="text-[10px] sm:text-xs text-gray-400">Safety</div>
                   </div>
                 </div>
               </div>
