@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
-    userScalable: false, // Prevent zoom for app-like experience
-    viewportFit: 'cover', // Handle notches on iPhone X+
+    userScalable: false,
+    viewportFit: 'cover',
   },
   themeColor: '#1a1a2e',
   manifest: '/manifest.json',
@@ -23,26 +23,12 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'ATOM',
   },
-  iconshead>
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      </head>
-      <body className={inter.className}>
-        <Providers>
-          {children}
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              duration: 3000,
-              className: 'glass',
-              style: {
-                background: 'rgba(0, 0, 0, 0.9)',
-                color: '#fff',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(10px)',
-                fontSize: '14px',
-                padding: '12px 16px
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">

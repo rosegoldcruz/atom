@@ -226,7 +226,10 @@ body {
 
 /* Data visualization */
 .chart-container {
-  @apply glass- Mobile optimized */
+  @apply glass p-4 rounded-lg;
+}
+
+/* Event feed - Mobile optimized */
 .event-item {
   @apply p-3 sm:p-4 mb-2 glass rounded-lg border-l-4 transition-all duration-200 active:bg-opacity-20;
 }
@@ -235,9 +238,6 @@ body {
   .event-item:hover {
     @apply bg-opacity-20;
   }
-/* Event feed */
-.event-item {
-  @apply p-4 mb-2 glass rounded-lg border-l-4 transition-all duration-200 hover:bg-opacity-20;
 }
 
 .event-success {
@@ -247,16 +247,28 @@ body {
 .event-warning {
   @apply event-item border-atom-warning;
 }
+
+.event-error {
+  @apply event-item border-atom-error;
+}
+
 /* Navigation - Mobile optimized */
 .nav-item {
   @apply flex items-center px-3 py-2.5 sm:px-4 sm:py-3 text-gray-300 active:text-white active:bg-white active:bg-opacity-10 rounded-lg transition-all duration-200;
-  /* Better touch targets */
   min-height: 44px;
 }
 
 @media (min-width: 768px) {
   .nav-item:hover {
-    @apply text-white bg- Mobile First */
+    @apply text-white bg-white bg-opacity-10;
+  }
+}
+
+.nav-item.active {
+  @apply text-white bg-atom-highlight bg-opacity-20;
+}
+
+/* Mobile First */
 @media (max-width: 640px) {
   .card {
     @apply p-3;
@@ -266,7 +278,6 @@ body {
     @apply px-3 py-2 text-sm;
   }
   
-  /* Optimize scrollbars for mobile */
   ::-webkit-scrollbar {
     width: 4px;
   }
@@ -280,33 +291,15 @@ body {
 
 /* Touch-friendly click targets */
 @media (hover: none) and (pointer: coarse) {
-  /* Mobile devices - larger touch targets */
   button, a, .clickable {
     min-height: 44px;
-    min-width: 44px
+    min-width: 44px;
+  }
+}
+
 /* Safe area for mobile notches/bottom bars */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* Navigation */
-.nav-item {
-  @apply flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-white hover:bg-opacity-10 rounded-lg transition-all duration-200;
-}
-
-.nav-item.active {
-  @apply text-white bg-atom-highlight bg-opacity-20;
-}
-
-/* Responsive utilities */
-@media (max-width: 768px) {
-  .card {
-    @apply p-4;
-  }
-  
-  .button {
-    @apply px-4 py-2 text-sm;
-  }
 }
 
 /* Loading states */
